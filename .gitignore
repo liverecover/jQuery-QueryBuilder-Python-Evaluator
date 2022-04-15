@@ -3,3 +3,4 @@ dist
 jqqb_evaluator.egg-info/
 venv
 .idea
+.vscode

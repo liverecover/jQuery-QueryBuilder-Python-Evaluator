@@ -1,3 +1,13 @@
+# make all strings lower case to do case insensitive match
+def lower(data):
+    if isinstance(data, str):
+        return data.lower()
+
+    if isinstance(data, list) and len(data) and isinstance(data[0], str):
+        return [d.lower() for d in data]
+
+    return data
+
 class Operators:
     @staticmethod
     def eval_begins_with(left, right):
@@ -11,6 +21,9 @@ class Operators:
 
     @staticmethod
     def eval_contains(left, right):
+        left = lower(left)
+        right = lower(right)
+
         if isinstance(right, list):
             if isinstance(left, list):
                 return any([any(map(lambda x: r in x, left)) for r in right])
@@ -94,6 +107,9 @@ class Operators:
 
     @staticmethod
     def eval_not_contains(left, right):
+        left = lower(left)
+        right = lower(right)
+
         if isinstance(right, list):
             if isinstance(left, list):
                 return not any([any(map(lambda x: r in x, left)) for r in right])
@@ -118,3 +134,20 @@ class Operators:
     @staticmethod
     def eval_not_in(left, right):
         return right not in left
+
+
+if __name__ == '__main__':
+    assert Operators.eval_contains("A", ["a"]) == True
+    assert Operators.eval_contains(["A"], "a") == True
+    assert Operators.eval_contains("A", "a") == True
+    assert Operators.eval_contains(["A"], ["a"]) == True
+    assert Operators.eval_contains([], ["a"]) == False
+    assert Operators.eval_contains("A", []) == False
+
+    assert Operators.eval_not_contains("A", ["a"]) == False
+    assert Operators.eval_not_contains(["A"], "a") == False
+    assert Operators.eval_not_contains("A", "a") == False
+    assert Operators.eval_not_contains(["A"], ["a"]) == False
+    assert Operators.eval_not_contains([], ["a"]) == True
+    assert Operators.eval_not_contains("A", []) == True
+    print("OK")
